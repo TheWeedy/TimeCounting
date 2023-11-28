@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.timemanager.config.APProute
 import com.example.timemanager.ui.theme.TimeManagerTheme
 import kotlinx.coroutines.delay
