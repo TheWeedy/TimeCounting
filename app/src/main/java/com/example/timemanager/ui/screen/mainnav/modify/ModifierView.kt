@@ -12,13 +12,53 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.example.timemanager.entity.AppDatabase
+import com.example.timemanager.ui.screen.mainnav.dictionary.Wordlist
 
 @Composable
 fun ModifierView() {
+
+    Singleadd()
+}
+
+@Composable
+fun Singleadd() {
+    val mContext = LocalContext.current
+    val db=AppDatabase.getDB(mContext)
+    val userDao = db.userDao()
+    val users: List<Wordlist> = userDao.getAll()
+    var text by remember {
+        mutableStateOf("")
+    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            modifier = Modifier
+                .padding(15.dp)
+                .fillMaxWidth(),
+            label = { Text("Word") }
+        )
+        Button(onClick = { /*TODO*/ }, modifier = Modifier.padding(15.dp)) {
+            Text(text = "ADD")
+        }
+    }
+}
+
+
+@Composable
+fun Multiadd() {
     Column(modifier = Modifier.fillMaxSize()) {
         Card(
             modifier = Modifier
@@ -30,16 +70,14 @@ fun ModifierView() {
         ) {
 
         }
-        Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Button(
-                onClick = { /*TODO*/ },
-                shape = MaterialTheme.shapes.medium
+                onClick = { /*TODO*/ }, shape = MaterialTheme.shapes.medium
             ) {
                 Text(text = "格式生成")
             }
             Button(
-                onClick = { /*TODO*/ },
-                shape = MaterialTheme.shapes.medium
+                onClick = { /*TODO*/ }, shape = MaterialTheme.shapes.medium
             ) {
                 Text(text = "添加单词")
             }

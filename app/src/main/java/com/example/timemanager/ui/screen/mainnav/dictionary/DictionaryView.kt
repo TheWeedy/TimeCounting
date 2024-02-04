@@ -1,6 +1,7 @@
 package com.example.timemanager.ui.screen.mainnav.dictionary
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,15 +37,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.example.timemanager.entity.AppDatabase
+import com.example.timemanager.entity.UserEntity
 import java.nio.file.WatchEvent
 import java.util.Dictionary
+import kotlin.system.exitProcess
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DictionaryView() {
+fun DictionaryView(mynavigation:NavController) {
     val dicViewModel: DicViewModel = viewModel()
     val wordlist by dicViewModel.wordList.collectAsState()
     val timecounting by dicViewModel.timeCounting.collectAsState()
+    val mContextDic = LocalContext.current
+    val db= AppDatabase.getDB(mContextDic)
+    val userDao = db.userDao()
+    val users: List<UserEntity> = userDao.getAll()
+    //返回监听
+    val backPressed = remember { mutableLongStateOf(0L) }
+    BackHandler(onBack = {
+        if (backPressed.longValue + 2000 > System.currentTimeMillis()) {
+            //mynavigation.navigateUp()
+            exitProcess(0)
+        } else {
+            Toast
+                .makeText(mContextDic, "再按一次退出", Toast.LENGTH_SHORT)
+                .show()
+            backPressed.longValue = System.currentTimeMillis()
+        }
+    })
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
@@ -68,9 +94,7 @@ fun DictionaryView() {
                 verticalArrangement = Arrangement.Top
             ) {
                 LazyColumn {
-                    items(wordlist.words){
-                        word->
-                        WordlistCard(word = word)
+                    items(users){
                     }
                 }
             }
@@ -104,8 +128,8 @@ fun WordlistCard(word: String) {
 }
 
 
-@Preview
-@Composable
-fun DictionaryPreview() {
-    DictionaryView()
-}
+//@Preview
+//@Composable
+//fun DictionaryPreview() {
+//    DictionaryView()
+//}

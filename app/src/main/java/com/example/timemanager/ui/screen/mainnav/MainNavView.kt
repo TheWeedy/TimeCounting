@@ -97,7 +97,6 @@ fun MainNavView() {
                                 contentDescription = null
                             )
                         },
-                        label = { Text(text = pair.first) },
                         colors = NavigationBarItemDefaults.colors(
                             selectedTextColor = MaterialTheme.colorScheme.primary
                         )
@@ -109,7 +108,7 @@ fun MainNavView() {
         Box(modifier = Modifier.padding(it)) {
             NavHost(navController = mainnavcontroller, startDestination = MAINrout.DIC_SCREEN) {
                 composable(MAINrout.DIC_SCREEN) {
-                    DictionaryView()
+                    DictionaryView(mainnavcontroller)
                 }
                 composable(MAINrout.MOD_SCREEN) {
                     ModifierView()
